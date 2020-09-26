@@ -6,7 +6,6 @@ const resolvers = require('./graphql/resolvers')
 const { MONGODB } =require('./config/database')
 const checkAuth = require('./util/checkAuth')
 
-const PORT = process.env.PORT || 5000;
 
 const server = new ApolloServer({
     typeDefs,
@@ -20,7 +19,7 @@ mongoose.connect(MONGODB, {
 })
     .then(() =>{
             console.log('MongoDb connected')
-        return server.listen({ port: PORT })
+        return server.listen({ port: process.env.PORT || 5000 })
     })
     .then(res => {
         console.log(`Server is running at ${res.url}`)
