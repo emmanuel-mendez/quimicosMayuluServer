@@ -44,11 +44,11 @@ module.exports = {
                         errors.user = 'Action not allowed'
                     }
     
-                    else if(body.trim() === ''){
+                    if(body.trim() === ''){
                         errors.body = 'Body must not be empty'
                     }
 
-                    else if(price === ''){
+                    if(price === ''){
                         errors.price = 'Price must not be empty'
                     }
 
