@@ -9,13 +9,13 @@ module.exports = {
         createComment: async (_, { productId, body }, {user}) => {
             
 
-            if (body.trim() === '') {
-                throw new UserInputError ('Empty comment', {
-                    errors: {
-                        body: 'Comment body must not be empty'
-                    }
-                })
-            }
+            // if (body.trim() === '') {
+            //     throw new UserInputError ('Empty comment', {
+            //         errors: {
+            //             body: 'Comment body must not be empty'
+            //         }
+            //     })
+            // }
 
             const product = await Product.findById(productId)
 
