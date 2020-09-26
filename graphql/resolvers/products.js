@@ -54,7 +54,7 @@ module.exports = {
                     }
 
                     else if (!price.match(regEx)) {
-                        errors.price = 'Ingrese un precio válido'
+                        errors.priceInvalid = 'Ingrese un precio válido'
                     }
     
                     else if (bodyQuery) {
