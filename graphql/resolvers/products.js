@@ -36,22 +36,23 @@ module.exports = {
                 let errors = {}
 
                 if (user) {
+
+                    const regEx = /^[0-9]+$/
+
                     
                     if (user.admin != true) {
                         errors.user = 'Action not allowed'
                     }
     
-                    if(body.trim() === ''){
+                    else if(body.trim() === ''){
                         errors.body = 'Body must not be empty'
                     }
 
-                    if(price === ''){
+                    else if(price === ''){
                         errors.price = 'Price must not be empty'
                     }
 
-                    const regEx = /^[0-9]+$/
-
-                    if (!price.match(regEx)) {
+                    else if (!price.match(regEx)) {
                         errors.price = 'Ingrese un precio válido'
                     }
     
