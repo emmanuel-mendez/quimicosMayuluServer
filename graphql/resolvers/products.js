@@ -29,7 +29,7 @@ module.exports = {
     },
 
     Mutation: {
-        async createProduct(_, { body, price }, {user}){
+        async createProduct(_, { body }, {user}){
 
             try {
 
@@ -41,12 +41,8 @@ module.exports = {
                         errors.user = 'Action not allowed'
                     }
     
-                    if(body.trim() === ''){
+                    else if(body.trim() === ''){
                         errors.body = 'Body must not be empty'
-                    }
-
-                    if (price.trim() === '') {
-                        errors.price = 'Price must not be empty'
                     }
     
                     const bodyQuery = await Product.findOne({body: body})
@@ -57,7 +53,6 @@ module.exports = {
     
                     const newProduct = new Product({
                         body,
-                        price,
                         user: user.id,
                         username: user.username,
                         createdAt: new Date().toISOString()
