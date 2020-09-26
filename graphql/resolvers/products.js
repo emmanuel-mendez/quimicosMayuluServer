@@ -53,7 +53,7 @@ module.exports = {
                     }
 
                     else if (!price.match(regEx)) {
-                        errors.price = 'Ingrese un precio válido'
+                        errors.product = 'Ingrese un precio válido'
                     }
     
                     const bodyQuery = await Product.findOne({body: body})
