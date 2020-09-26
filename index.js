@@ -12,7 +12,7 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     context: checkAuth,
-    subscriptions: { path: '/'}
+    subscriptions: { path: '/messages'}
 })
 
 mongoose.connect(MONGODB, { 
