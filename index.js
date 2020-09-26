@@ -18,8 +18,9 @@ mongoose.connect(MONGODB, {
     useUnifiedTopology: true 
 })
     .then(() =>{
-            console.log('MongoDb connected')
-        return server.listen({ port: process.env.PORT || 5000 })
+        app.listen(process.env.PORT || 5000, function(){
+            console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+        });
     })
     .then(res => {
         console.log(`Server is running at ${res.url}`)
