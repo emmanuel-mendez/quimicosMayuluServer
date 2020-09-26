@@ -39,6 +39,7 @@ module.exports = {
 
                     const regEx = /^[0-9]+$/
 
+                    const bodyQuery = await Product.findOne({body: body})
                     
                     if (user.admin != true) {
                         errors.user = 'Action not allowed'
@@ -53,12 +54,10 @@ module.exports = {
                     }
 
                     else if (!price.match(regEx)) {
-                        errors.product = 'Ingrese un precio válido'
+                        errors.price = 'Ingrese un precio válido'
                     }
     
-                    const bodyQuery = await Product.findOne({body: body})
-    
-                    if (bodyQuery) {
+                    else if (bodyQuery) {
                         errors.product = 'Product duplicated'
                     }
     
