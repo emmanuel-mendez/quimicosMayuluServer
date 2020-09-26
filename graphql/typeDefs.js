@@ -32,6 +32,7 @@ module.exports = gql`
     type Product {
         id: ID!
         body: String!
+        price: String!
         createdAt: String!
         username: String!
         comments: [Comment]!
@@ -104,6 +105,7 @@ module.exports = gql`
 
         createProduct (
             body: String!
+            price: String!
         ): Product!
 
         deleteProduct (
