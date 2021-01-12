@@ -3,137 +3,137 @@ const { AuthenticationError, UserInputError } = require('apollo-server')
 const Product = require('../../models/Product')
 
 module.exports = {
-    Query: {
-        async getProducts(){
-            try{
-                const products = await Product.find().sort({ createdAt: -1 })
-                return products
-            }catch(errors){
-                throw new UserInputError('Bad input', { errors })
-            }
-        },
+	Query: {
+		async getProducts() {
+			try {
+				const products = await Product.find().sort({ createdAt: -1 })
+				return products
+			} catch (errors) {
+				throw new UserInputError('Bad input', { errors })
+			}
+		},
 
-        async getProduct(_, {productId}){
-            try{
-                const product = await Product.findById(productId)
-                if (product) {
-                    return product
-                }else{
-                    throw new Error('Product not found')
-                }
+		async getProduct(_, { productId }) {
+			try {
+				const product = await Product.findById(productId)
+				if (product) {
+					return product
+				} else {
+					throw new Error('Product not found')
+				}
 
-            } catch(errors){
-                throw new UserInputError('Bad input', { errors })
-            }
-        }
-    },
+			} catch (errors) {
+				throw new UserInputError('Bad input', { errors })
+			}
+		}
+	},
 
-    Mutation: {
-        async createProduct(_, { body, price }, {user}){
+	Mutation: {
+		async createProduct(_, { body, price }, { user }) {
 
-            try {
+			try {
 
-                let errors = {}
+				let errors = {}
 
-                if (user) {
+				if (user) {
 
-                    const regEx = /^[0-9]+$/
+					const regEx = /^[0-9]+$/
 
-                    const bodyQuery = await Product.findOne({body: body})
-                    
-                    if (user.admin != true) {
-                        errors.user = 'Action not allowed'
-                    }
-    
-                    if(body.trim() === ''){
-                        errors.body = 'Body must not be empty'
-                    }
+					const bodyQuery = await Product.findOne({ body: body })
 
-                    if(price === ''){
-                        errors.price = 'Price must not be empty'
-                    }
+					if (user.admin != true) {
+						errors.user = 'Action not allowed'
+					}
 
-                    else if (!price.match(regEx)) {
-                        errors.priceInvalid = 'Ingrese un precio válido'
-                    }
-    
-                    else if (bodyQuery) {
-                        errors.product = 'Product duplicated'
-                    }
-    
-                    const newProduct = new Product({
-                        body,
-                        price,
-                        user: user.id,
-                        username: user.username,
-                        createdAt: new Date().toISOString()
-                    })
-    
-                    if (Object.keys(errors).length > 0) {
-                        throw errors
-                    }
-    
-                    const product = await newProduct.save()
-    
-                    return product
-                }
+					if (body.trim() === '') {
+						errors.body = 'Body must not be empty'
+					}
 
-                else{
-                    throw new AuthenticationError('Invalid/Expired token')
-                }
+					if (price === '') {
+						errors.price = 'Price must not be empty'
+					}
 
+					else if (!price.match(regEx)) {
+						errors.priceInvalid = 'Ingrese un precio válido'
+					}
 
-            } catch (errors) {
-                throw new UserInputError('Bad input', { errors })
-            }
+					else if (bodyQuery) {
+						errors.product = 'Product duplicated'
+					}
 
-        },
+					const newProduct = new Product({
+						body,
+						price,
+						user: user.id,
+						username: user.username,
+						createdAt: new Date().toISOString()
+					})
 
-        async deleteProduct(_, { productId }, {user}){
+					if (Object.keys(errors).length > 0) {
+						throw errors
+					}
 
-            try {
+					const product = await newProduct.save()
 
-                const product = await Product.findById(productId)
+					return product
+				}
+
+				else {
+					throw new AuthenticationError('Invalid/Expired token')
+				}
 
 
-                if ( user.admin === true ) {
-                    await product.delete()
-                    return 'Product deleted successfully'
-                } else {
-                    throw new AuthenticationError('Action not allowed')
-                }
+			} catch (errors) {
+				throw new UserInputError('Bad input', { errors })
+			}
 
-            } catch (errors) {
-                throw new UserInputError('Bad input', { errors })
-            }
-        },
+		},
 
-        async likeProduct(_, { productId }, {user}){
+		async deleteProduct(_, { productId }, { user }) {
 
-            const product = await Product.findById(productId)
+			try {
 
-            if (product) {
-                
-                if (product.likes.find(like => like.username === user.username)) {
-                    
-                    // Product already liked, unlike it
-                    product.likes = product.likes.filter(like => like.username !== user.username)
+				const product = await Product.findById(productId)
 
-                } else{
-                    // Product not liked, like it
-                    product.likes.push({
-                        username: user.username,
-                        createdAt: new Date().toISOString()
-                    })
-                }
 
-                await product.save()
+				if (user.admin === true) {
+					await product.delete()
+					return 'Product deleted successfully'
+				} else {
+					throw new AuthenticationError('Action not allowed')
+				}
 
-                return product
+			} catch (errors) {
+				throw new UserInputError('Bad input', { errors })
+			}
+		},
 
-            } else{
-                throw new UserInputError('Product not found')
-            }
-        }
-    },
+		async likeProduct(_, { productId }, { user }) {
+
+			const product = await Product.findById(productId)
+
+			if (product) {
+
+				if (product.likes.find(like => like.username === user.username)) {
+
+					// Product already liked, unlike it
+					product.likes = product.likes.filter(like => like.username !== user.username)
+
+				} else {
+					// Product not liked, like it
+					product.likes.push({
+						username: user.username,
+						createdAt: new Date().toISOString()
+					})
+				}
+
+				await product.save()
+
+				return product
+
+			} else {
+				throw new UserInputError('Product not found')
+			}
+		}
+	},
 }

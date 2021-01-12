@@ -4,60 +4,61 @@ const Product = require('../../models/Product')
 
 module.exports = {
 
-    Mutation: {
-        
-        createComment: async (_, { productId, body }, {user}) => {
-            
+	Mutation: {
 
-            // if (body.trim() === '') {
-            //     throw new UserInputError ('Empty comment', {
-            //         errors: {
-            //             body: 'Comment body must not be empty'
-            //         }
-            //     })
-            // }
+		createComment: async (_, { productId, body }, { user }) => {
 
-            const product = await Product.findById(productId)
+			// if (body.trim() === '') {
+			//     throw new UserInputError ('Empty comment', {
+			//         errors: {
+			//             body: 'Comment body must not be empty'
+			//         }
+			//     })
+			// }
 
-            if (product) {
-                product.comments.unshift({
-                    body,
-                    username: user.username,
-                    createdAt: new Date().toISOString()
-                })
+			console.log(2);
 
-                await product.save()
+			const product = await Product.findById(productId)
 
-                return product
+			if (product) {
+				product.comments.unshift({
+					body,
+					username: user.username,
+					createdAt: new Date().toISOString()
+				})
 
-            }else{
-                throw new UserInputError('Product not found')
-            }
-        },
+				await product.save()
 
-        async deleteComment (_, { productId, commentId }, {user}){
-            
-            const product = await Product.findById(productId)
+				return product
 
-            if (product) {
+			} else {
+				throw new UserInputError('Product not found')
+			}
+		},
 
-                const commentIndex = product.comments.findIndex(c => c.id === commentId)
+		async deleteComment(_, { productId, commentId }, { user }) {
 
-                if(user.admin === true || product.comments[commentIndex].username === user.username){
+			const product = await Product.findById(productId)
 
-                    product.comments.splice(commentIndex, 1)
+			if (product) {
 
-                    await product.save()
+				const commentIndex = product.comments.findIndex(c => c.id === commentId)
 
-                    return product
+				if (user.admin === true || product.comments[commentIndex].username === user.username) {
 
-                }else{
-                    throw new AuthenticationError('Action not allowed')
-                }
+					product.comments.splice(commentIndex, 1)
 
-            }else{
-                throw new UserInputError('Post not found')
-            }
-        }
-    }
+					await product.save()
+
+					return product
+
+				} else {
+					throw new AuthenticationError('Action not allowed')
+				}
+
+			} else {
+				throw new UserInputError('Post not found')
+			}
+		}
+	}
 }
