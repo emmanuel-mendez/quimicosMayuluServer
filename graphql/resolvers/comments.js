@@ -16,8 +16,6 @@ module.exports = {
 			//     })
 			// }
 
-			console.log(2);
-
 			const product = await Product.findById(productId)
 
 			if (product) {
